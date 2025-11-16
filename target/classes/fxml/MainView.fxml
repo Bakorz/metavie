@@ -1,0 +1,176 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.VBox?>
+
+<BorderPane prefHeight="800.0" prefWidth="1400.0" style="-fx-background-color: #141414;" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.bakorz.ui.MainViewController">
+    
+    <!-- Top: Search Bar -->
+    <top>
+        <HBox alignment="CENTER_LEFT" spacing="10.0" style="-fx-background-color: #1a1a1a; -fx-padding: 15px;">
+            <Label style="-fx-text-fill: #E50914; -fx-font-size: 24px; -fx-font-weight: bold;" text="METAVIE" />
+            <Region HBox.hgrow="ALWAYS" />
+            <TextField fx:id="searchField" prefWidth="400.0" promptText="Search..." style="-fx-background-color: #2a2a2a; -fx-text-fill: white;" />
+            <Button fx:id="searchButton" onAction="#handleSearch" style="-fx-background-color: #E50914; -fx-text-fill: white;" text="Search" />
+        </HBox>
+    </top>
+    
+    <!-- Center: Content ScrollPane -->
+    <center>
+        <ScrollPane fx:id="contentScrollPaneSection" fitToWidth="true" style="-fx-background: #141414; -fx-background-color: #141414;">
+         <content>
+            <VBox fx:id="contentContainer" spacing="30.0" style="-fx-padding: 20px;">
+               <children>
+                  <VBox fx:id="continueWatchingSection" spacing="10.0">
+                     <children>
+                        <HBox alignment="CENTER_LEFT" spacing="10.0">
+                           <children>
+                              <Label style="-fx-text-fill: white; -fx-font-size: 20; -fx-font-weight: bold;" text="Continue Watching" HBox.hgrow="ALWAYS" />
+                           </children>
+                        </HBox>
+                        <ScrollPane fx:id="continueWatchingScroll" fitToHeight="true" style="-fx-background: transparent; -fx-background-color: transparent;">
+                           <content>
+                              <HBox fx:id="continueWatchingContainer" spacing="15.0" style="-fx-padding: 10px;" />
+                           </content>
+                        </ScrollPane>
+                     </children>
+                  </VBox>
+                  <VBox fx:id="favoritesSection" spacing="10.0">
+                     <children>
+                        <HBox alignment="CENTER_LEFT" spacing="10.0">
+                           <children>
+                              <Label style="-fx-text-fill: white; -fx-font-size: 20; -fx-font-weight: bold;" text="My Favorite" HBox.hgrow="ALWAYS" />
+                           </children>
+                        </HBox>
+                        <ScrollPane fx:id="favoritesScroll" fitToHeight="true" style="-fx-background: transparent; -fx-background-color: transparent;">
+                           <content>
+                              <HBox fx:id="favoritesContainer" spacing="15.0" style="-fx-padding: 10px;" />
+                           </content>
+                        </ScrollPane>
+                     </children>
+                  </VBox>
+                  <VBox fx:id="topRatedMoviesSection" spacing="10.0">
+                     <children>
+                        <HBox alignment="CENTER_LEFT" spacing="10.0">
+                           <children>
+                              <Label style="-fx-text-fill: white; -fx-font-size: 20; -fx-font-weight: bold;" text="Top Rated Movie" HBox.hgrow="ALWAYS" />
+                              <Region HBox.hgrow="ALWAYS" />
+                              <Button fx:id="loadMoreTopMovies" mnemonicParsing="false" onAction="#handleTopMovies" style="-fx-background-color: transparent; -fx-text-fill: E50914; -fx-border-color: E50914;" text="Load More" />
+                           </children>
+                        </HBox>
+                        <ScrollPane fx:id="topRatedMoviesScroll" fitToHeight="true" style="-fx-background: transparent; -fx-background-color: transparent;">
+                           <content>
+                              <HBox fx:id="topRatedMoviesContainer" spacing="15.0" style="-fx-padding: 10px;" />
+                           </content>
+                        </ScrollPane>
+                     </children>
+                  </VBox>
+                  <VBox fx:id="topRatedMoviesSection" spacing="10.0">
+                     <children>
+                        <HBox alignment="CENTER_LEFT" spacing="10.0">
+                           <children>
+                              <Label style="-fx-text-fill: white; -fx-font-size: 20; -fx-font-weight: bold;" text="Top Rated Movie" HBox.hgrow="ALWAYS" />
+                              <Region HBox.hgrow="ALWAYS" />
+                              <Button fx:id="loadMoreTopMovies" mnemonicParsing="false" onAction="#handleTopMovies" style="-fx-background-color: transparent; -fx-text-fill: E50914; -fx-border-color: E50914;" text="Load More" />
+                           </children>
+                        </HBox>
+                        <ScrollPane fx:id="topRatedMoviesScroll" fitToHeight="true" style="-fx-background: transparent; -fx-background-color: transparent;">
+                           <content>
+                              <HBox fx:id="topRatedMoviesContainer" spacing="15.0" style="-fx-padding: 10px;" />
+                           </content>
+                        </ScrollPane>
+                     </children>
+                  </VBox>
+                  <VBox fx:id="LatestMoviesSection" spacing="10.0">
+                     <children>
+                        <HBox alignment="CENTER_LEFT" spacing="10.0">
+                           <children>
+                              <Label style="-fx-text-fill: white; -fx-font-size: 20; -fx-font-weight: bold;" text="Latest Movie" HBox.hgrow="ALWAYS" />
+                              <Region HBox.hgrow="ALWAYS" />
+                              <Button fx:id="loadMoreLatestMovies" mnemonicParsing="false" onAction="#handleLatestMovies" style="-fx-background-color: transparent; -fx-text-fill: E50914; -fx-border-color: E50914;" text="Load More" />
+                           </children>
+                        </HBox>
+                        <ScrollPane fx:id="latestMoviesScroll" fitToHeight="true" style="-fx-background: transparent; -fx-background-color: transparent;">
+                           <content>
+                              <HBox fx:id="latestMoviesContainer" spacing="15.0" style="-fx-padding: 10px;" />
+                           </content>
+                        </ScrollPane>
+                     </children>
+                  </VBox>
+                  <VBox fx:id="topRatedTVShowSection" spacing="10.0">
+                     <children>
+                        <HBox alignment="CENTER_LEFT" spacing="10.0">
+                           <children>
+                              <Label style="-fx-text-fill: white; -fx-font-size: 20; -fx-font-weight: bold;" text="Top Rated TV Show" HBox.hgrow="ALWAYS" />
+                              <Region HBox.hgrow="ALWAYS" />
+                              <Button fx:id="loadMoreTopTVShows" mnemonicParsing="false" onAction="#handleTopTVShows" style="-fx-background-color: transparent; -fx-text-fill: E50914; -fx-border-color: E50914;" text="Load More" />
+                           </children>
+                        </HBox>
+                        <ScrollPane fx:id="topRatedTVShowsScroll" fitToHeight="true" style="-fx-background: transparent; -fx-background-color: transparent;">
+                           <content>
+                              <HBox fx:id="topRatedTVShowsContainer" spacing="15.0" style="-fx-padding: 10px;" />
+                           </content>
+                        </ScrollPane>
+                     </children>
+                  </VBox>
+                  <VBox fx:id="LatestTVShowSection" spacing="10.0">
+                     <children>
+                        <HBox alignment="CENTER_LEFT" spacing="10.0">
+                           <children>
+                              <Label style="-fx-text-fill: white; -fx-font-size: 20; -fx-font-weight: bold;" text="Latest TV Show" HBox.hgrow="ALWAYS" />
+                              <Region HBox.hgrow="ALWAYS" />
+                              <Button fx:id="loadMoreLatestTVShows" mnemonicParsing="false" onAction="#handleLatestTVShows" style="-fx-background-color: transparent; -fx-text-fill: E50914; -fx-border-color: E50914;" text="Load More" />
+                           </children>
+                        </HBox>
+                        <ScrollPane fx:id="latestTVShowsScroll" fitToHeight="true" style="-fx-background: transparent; -fx-background-color: transparent;">
+                           <content>
+                              <HBox fx:id="latestTVShowsContainer" spacing="15.0" style="-fx-padding: 10px;" />
+                           </content>
+                        </ScrollPane>
+                     </children>
+                  </VBox>
+                  <VBox fx:id="topRatedAnimeSection" spacing="10.0">
+                     <children>
+                        <HBox alignment="CENTER_LEFT" spacing="10.0">
+                           <children>
+                              <Label style="-fx-text-fill: white; -fx-font-size: 20; -fx-font-weight: bold;" text="Top Rated Anime" HBox.hgrow="ALWAYS" />
+                              <Region HBox.hgrow="ALWAYS" />
+                              <Button fx:id="loadMoreTopAnime" mnemonicParsing="false" onAction="#handleTopAnime" style="-fx-background-color: transparent; -fx-text-fill: E50914; -fx-border-color: E50914;" text="Load More" />
+                           </children>
+                        </HBox>
+                        <ScrollPane fx:id="topRatedAnimeScroll" fitToHeight="true" style="-fx-background: transparent; -fx-background-color: transparent;">
+                           <content>
+                              <HBox fx:id="topRatedAnimeContainer" spacing="15.0" style="-fx-padding: 10px;" />
+                           </content>
+                        </ScrollPane>
+                     </children>
+                  </VBox>
+                  <VBox fx:id="AiringNowAnime" spacing="10.0">
+                     <children>
+                        <HBox alignment="CENTER_LEFT" spacing="10.0">
+                           <children>
+                              <Label style="-fx-text-fill: white; -fx-font-size: 20; -fx-font-weight: bold;" text="Anime Airing Now" HBox.hgrow="ALWAYS" />
+                              <Region HBox.hgrow="ALWAYS" />
+                              <Button fx:id="loadMoreAiringNowAnime" mnemonicParsing="false" onAction="#handleAiringNowAnime" style="-fx-background-color: transparent; -fx-text-fill: E50914; -fx-border-color: E50914;" text="Load More" />
+                           </children>
+                        </HBox>
+                        <ScrollPane fx:id="airingNowAnimeScroll" fitToHeight="true" style="-fx-background: transparent; -fx-background-color: transparent;">
+                           <content>
+                              <HBox fx:id="airingNowAnimeContainer" spacing="15.0" style="-fx-padding: 10px;" />
+                           </content>
+                        </ScrollPane>
+                     </children>
+                  </VBox>
+               </children>
+            </VBox>
+         </content>
+         </ScrollPane>
+    </center>
+    
+</BorderPane>
