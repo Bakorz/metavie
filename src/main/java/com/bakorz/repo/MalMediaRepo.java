@@ -6,16 +6,44 @@ import java.io.*;
 import java.net.*;
 import java.util.*;
 
+/**
+ * MyAnimeList API implementation of MediaRepo interface.
+ * Connects to MyAnimeList API v2 to fetch anime data.
+ * Requires a client ID for authentication.
+ * Provides search, retrieval, and ranking operations for anime.
+ * Converts JSON responses to Anime model objects.
+ * 
+ * @author Bakorz
+ * @version 1.0
+ */
 public class MalMediaRepo implements MediaRepo {
+    /** Base URL for MyAnimeList API */
     private static final String MAL_API_BASE = "https://api.myanimelist.net/v2/";
+
+    /** MAL API client ID for authentication */
     private String clientId;
+
+    /** JSON parser/serializer */
     private Gson gson;
 
+    /**
+     * Constructor that initializes the repository with API credentials.
+     * 
+     * @param clientId MyAnimeList API client ID
+     */
     public MalMediaRepo(String clientId) {
         this.clientId = clientId;
         this.gson = new Gson();
     }
 
+    /**
+     * Makes an HTTP GET request to the MAL API.
+     * Includes client ID in request headers for authentication.
+     * 
+     * @param endpoint API endpoint path (appended to base URL)
+     * @return JSON response as string
+     * @throws IOException if request fails
+     */
     private String makeApiRequest(String endpoint) throws IOException {
         URI uri = URI.create(MAL_API_BASE + endpoint);
         URL url = uri.toURL();

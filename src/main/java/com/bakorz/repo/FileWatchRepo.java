@@ -4,17 +4,37 @@ import com.bakorz.model.WatchEntry;
 import java.io.*;
 import java.util.*;
 
+/**
+ * File-based implementation of WatchRepo interface.
+ * Stores watch list data in a CSV file (data/watch.csv).
+ * Uses in-memory caching for fast retrieval.
+ * Tracks user's currently watching media items.
+ * 
+ * @author Bakorz
+ * @version 1.0
+ */
 public class FileWatchRepo implements WatchRepo {
+    /** Path to the watch list CSV file */
     private static final String WATCH_FILE = "data/watch.csv";
+
+    /** CSV delimiter character */
     private static final String DELIMITER = ",";
 
+    /** In-memory cache of watch entries mapped by watch ID */
     private Map<String, WatchEntry> watchCache;
 
+    /**
+     * Constructor that initializes the repository and loads existing data.
+     */
     public FileWatchRepo() {
         this.watchCache = new HashMap<>();
         loadFromFile();
     }
 
+    /**
+     * Loads watch entry data from CSV file into memory cache.
+     * Skips header line and handles missing files gracefully.
+     */
     private void loadFromFile() {
         File file = new File(WATCH_FILE);
         if (!file.exists()) {
@@ -41,6 +61,12 @@ public class FileWatchRepo implements WatchRepo {
         }
     }
 
+    /**
+     * Parses a CSV line into a WatchEntry object.
+     * 
+     * @param line CSV line to parse
+     * @return WatchEntry object or null if parsing fails
+     */
     private WatchEntry parseWatchEntry(String line) {
         String[] parts = line.split(DELIMITER, -1);
         if (parts.length < 4) {

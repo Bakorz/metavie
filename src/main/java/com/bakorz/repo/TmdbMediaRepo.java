@@ -6,17 +6,47 @@ import java.io.*;
 import java.net.*;
 import java.util.*;
 
+/**
+ * TMDB (The Movie Database) API implementation of MediaRepo interface.
+ * Connects to TMDB API to fetch movie and TV show data.
+ * Requires an API key for authentication.
+ * Provides search, retrieval, and ranking operations for movies and TV shows.
+ * Converts JSON responses to Movie and TVShow model objects.
+ * 
+ * @author Bakorz
+ * @version 1.0
+ */
 public class TmdbMediaRepo implements MediaRepo {
+    /** Base URL for TMDB API */
     private static final String TMDB_API_BASE = "https://api.themoviedb.org/3";
+
+    /** Base URL for TMDB images */
     private static final String IMAGE_BASE = "https://image.tmdb.org/t/p/";
+
+    /** TMDB API key for authentication */
     private String apiKey;
+
+    /** JSON parser/serializer */
     private Gson gson;
 
+    /**
+     * Constructor that initializes the repository with API credentials.
+     * 
+     * @param apiKey TMDB API key
+     */
     public TmdbMediaRepo(String apiKey) {
         this.apiKey = apiKey;
         this.gson = new Gson();
     }
 
+    /**
+     * Makes an HTTP GET request to the TMDB API.
+     * Appends API key to the request URL for authentication.
+     * 
+     * @param endpoint API endpoint path (appended to base URL)
+     * @return JSON response as string
+     * @throws IOException if request fails
+     */
     private String makeApiRequest(String endpoint) throws IOException {
         String separator = endpoint.contains("?") ? "&" : "?";
         String urlString = TMDB_API_BASE + endpoint + separator + "api_key=" + apiKey;
@@ -297,6 +327,7 @@ public class TmdbMediaRepo implements MediaRepo {
     public List<MediaItem> getTopRated(int limit) {
         return getTopRated(limit, 1);
     }
+
     public List<MediaItem> getTopRated(int limit, int page) {
         try {
             List<MediaItem> results = new ArrayList<>();

@@ -5,17 +5,37 @@ import java.io.*;
 import java.util.*;
 import java.util.stream.Collectors;
 
+/**
+ * File-based implementation of MediaRepo interface.
+ * Stores media data in a CSV file (data/media.csv) for caching purposes.
+ * Uses in-memory caching for fast retrieval.
+ * Supports all media types (Anime, Movie, TVShow) with composite key storage.
+ * 
+ * @author Bakorz
+ * @version 1.0
+ */
 public class FileMediaRepo implements MediaRepo {
+    /** Path to the media cache CSV file */
     private static final String MEDIA_FILE = "data/media.csv";
+
+    /** CSV delimiter character */
     private static final String DELIMITER = ",";
 
+    /** In-memory cache of media items mapped by ID (with composite keys) */
     private Map<String, MediaItem> mediaCache;
 
+    /**
+     * Constructor that initializes the repository and loads existing cached data.
+     */
     public FileMediaRepo() {
         this.mediaCache = new HashMap<>();
         loadFromFile();
     }
 
+    /**
+     * Loads media data from CSV file into memory cache.
+     * Skips header line and handles missing files gracefully.
+     */
     private void loadFromFile() {
         File file = new File(MEDIA_FILE);
         if (!file.exists()) {
@@ -42,6 +62,14 @@ public class FileMediaRepo implements MediaRepo {
         }
     }
 
+    /**
+     * Parses a CSV line into appropriate MediaItem subclass (Anime, Movie, or
+     * TVShow).
+     * Uses media type field to determine which subclass to instantiate.
+     * 
+     * @param line CSV line to parse
+     * @return MediaItem object (Anime, Movie, or TVShow) or null if parsing fails
+     */
     private MediaItem parseMediaItem(String line) {
         try {
             List<String> fields = parseCSVLine(line);

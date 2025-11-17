@@ -5,17 +5,37 @@ import java.io.*;
 import java.util.*;
 import java.util.stream.Collectors;
 
+/**
+ * File-based implementation of FavoriteRepo interface.
+ * Stores favorite data in a CSV file (data/favorite.csv).
+ * Uses in-memory caching for fast retrieval.
+ * Supports media type tracking for cross-platform favorites.
+ * 
+ * @author Bakorz
+ * @version 1.0
+ */
 public class FileFavoriteRepo implements FavoriteRepo {
+    /** Path to the favorites CSV file */
     private static final String FAVORITES_FILE = "data/favorite.csv";
+
+    /** CSV delimiter character */
     private static final String DELIMITER = ",";
 
+    /** In-memory cache of favorites mapped by favorite ID */
     private Map<String, Favorite> favoriteCache;
 
+    /**
+     * Constructor that initializes the repository and loads existing data.
+     */
     public FileFavoriteRepo() {
         this.favoriteCache = new HashMap<>();
         loadFromFile();
     }
 
+    /**
+     * Loads favorite data from CSV file into memory cache.
+     * Skips header line and handles missing files gracefully.
+     */
     private void loadFromFile() {
         File file = new File(FAVORITES_FILE);
         if (!file.exists()) {
@@ -42,6 +62,13 @@ public class FileFavoriteRepo implements FavoriteRepo {
         }
     }
 
+    /**
+     * Parses a CSV line into a Favorite object.
+     * Supports both old format (without mediaType) and new format (with mediaType).
+     * 
+     * @param line CSV line to parse
+     * @return Favorite object or null if parsing fails
+     */
     private Favorite parseFavorite(String line) {
         String[] parts = line.split(DELIMITER, -1);
         if (parts.length < 4) {
@@ -62,6 +89,10 @@ public class FileFavoriteRepo implements FavoriteRepo {
         }
     }
 
+    /**
+     * Saves all favorites from cache to CSV file.
+     * Overwrites the entire file with current cache contents.
+     */
     private void saveToFile() {
         try (BufferedWriter bw = new BufferedWriter(new FileWriter(FAVORITES_FILE))) {
             bw.write("favoriteId,userId,mediaId,mediaSource,mediaType");

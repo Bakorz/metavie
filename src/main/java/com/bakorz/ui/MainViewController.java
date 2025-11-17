@@ -14,11 +14,36 @@ import javafx.stage.Stage;
 import java.util.*;
 import java.util.stream.Collectors;
 
+/**
+ * Main view controller for the Metavie JavaFX application.
+ * Handles all UI interactions and coordinates between the view and services.
+ * Manages multiple media sections including search, favorites, watch list, and
+ * catalogs.
+ * Implements pagination for search results and catalog browsing.
+ * Creates dynamic UI cards for media items with interactive buttons.
+ * 
+ * Features:
+ * - Media search across all sources (MAL, TMDB)
+ * - Favorite management with add/remove functionality
+ * - Watch list tracking
+ * - Multiple catalog sections (top rated, latest, airing now)
+ * - Detailed media view with full information
+ * - Pagination support for large result sets
+ * 
+ * @author Bakorz
+ * @version 1.0
+ */
 public class MainViewController {
+    /** Background color constant for dark theme */
     private static final String BG_COLOR = "#141414";
+
+    /** Card background color */
     private static final String CARD_BG = "#2a2a2a";
+
+    /** Brand red color for accent elements */
     private static final String RED = "#E50914";
 
+    // FXML injected UI components
     @FXML
     private TextField searchField;
     @FXML
@@ -45,9 +70,16 @@ public class MainViewController {
     @FXML
     private HBox airingNowAnimeContainer;
 
+    /** Service for catalog operations */
     private CatalogService catalogService;
+
+    /** Service for favorite management */
     private FavoriteService favoriteService;
+
+    /** Service for watch list tracking */
     private TrackingService trackingService;
+
+    /** Current user ID */
     private String userId;
 
     private final Map<String, Integer> pageCounters = new HashMap<>();
