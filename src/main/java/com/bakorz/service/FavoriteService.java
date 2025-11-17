@@ -11,19 +11,25 @@ public class FavoriteService {
         this.favoriteRepo = favoriteRepo;
     }
 
-    public boolean addFavorite(String userId, String mediaId, String mediaSource) {
+    public boolean addFavorite(String userId, String mediaId, String mediaSource, String mediaType) {
         if (isFavorited(userId, mediaId)) {
             System.out.println("Media is already in favorites!");
             return false;
         }
 
         String favoriteId = UUID.randomUUID().toString();
-        Favorite favorite = new Favorite(favoriteId, userId, mediaId, mediaSource != null ? mediaSource : "FILE");
+        Favorite favorite = new Favorite(favoriteId, userId, mediaId,
+                mediaSource != null ? mediaSource : "FILE",
+                mediaType);
         return favoriteRepo.addFavorite(favorite);
     }
 
+    public boolean addFavorite(String userId, String mediaId, String mediaSource) {
+        return addFavorite(userId, mediaId, mediaSource, null);
+    }
+
     public boolean addFavorite(String userId, String mediaId) {
-        return addFavorite(userId, mediaId, "FILE");
+        return addFavorite(userId, mediaId, "FILE", null);
     }
 
     public boolean removeFavorite(String userId, String mediaId) {

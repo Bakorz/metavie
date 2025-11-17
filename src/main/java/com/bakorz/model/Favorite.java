@@ -5,6 +5,7 @@ public class Favorite {
     private String userId;
     private String mediaId;
     private String mediaSource;
+    private String mediaType; // "ANIME", "MOVIE", "TV_SHOW", or "OTHER"
 
     public Favorite() {
     }
@@ -14,6 +15,14 @@ public class Favorite {
         this.userId = userId;
         this.mediaId = mediaId;
         this.mediaSource = mediaSource;
+    }
+
+    public Favorite(String favoriteId, String userId, String mediaId, String mediaSource, String mediaType) {
+        this.favoriteId = favoriteId;
+        this.userId = userId;
+        this.mediaId = mediaId;
+        this.mediaSource = mediaSource;
+        this.mediaType = mediaType;
     }
 
     // Getters and Setters
@@ -49,6 +58,14 @@ public class Favorite {
         this.mediaSource = mediaSource;
     }
 
+    public String getMediaType() {
+        return mediaType;
+    }
+
+    public void setMediaType(String mediaType) {
+        this.mediaType = mediaType;
+    }
+
     @Override
     public String toString() {
         return "Favorite{" +
@@ -56,6 +73,7 @@ public class Favorite {
                 ", userId='" + userId + '\'' +
                 ", mediaId='" + mediaId + '\'' +
                 ", mediaSource='" + mediaSource + '\'' +
+                ", mediaType='" + mediaType + '\'' +
                 '}';
     }
 }

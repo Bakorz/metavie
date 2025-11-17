@@ -158,7 +158,8 @@ public class MainViewController {
     private void loadFavorites() {
         List<Favorite> favorites = favoriteService.getUserFavorites(userId);
         List<MediaItem> items = favorites.stream()
-                .map(fav -> catalogService.getById(fav.getMediaId(), fav.getMediaSource()).orElse(null))
+                .map(fav -> catalogService.getById(fav.getMediaId(), fav.getMediaSource(), fav.getMediaType())
+                        .orElse(null))
                 .filter(Objects::nonNull)
                 .collect(Collectors.toList());
         Platform.runLater(() -> updateSection(favoritesContainer, items, true));
@@ -403,7 +404,16 @@ public class MainViewController {
                 favoriteBtn.setText("♡ Add to Favorites");
                 loadFavorites();
             } else {
-                boolean success = favoriteService.addFavorite(userId, media.getId(), source);
+                // Determine media type
+                String mediaType = null;
+                if (media instanceof Anime) {
+                    mediaType = "ANIME";
+                } else if (media instanceof Movie) {
+                    mediaType = "MOVIE";
+                } else if (media instanceof TVShow) {
+                    mediaType = "TV_SHOW";
+                }
+                boolean success = favoriteService.addFavorite(userId, media.getId(), source, mediaType);
                 if (success) {
                     favoriteBtn.setText("❤ Remove from Favorites");
                     loadFavorites();

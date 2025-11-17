@@ -53,8 +53,9 @@ public class FileFavoriteRepo implements FavoriteRepo {
             String userId = parts[1];
             String mediaId = parts[2];
             String mediaSource = parts[3].isEmpty() ? "FILE" : parts[3];
+            String mediaType = (parts.length > 4 && !parts[4].isEmpty()) ? parts[4] : null;
 
-            return new Favorite(favoriteId, userId, mediaId, mediaSource);
+            return new Favorite(favoriteId, userId, mediaId, mediaSource, mediaType);
         } catch (Exception e) {
             System.err.println("Error parsing favorite line: " + e.getMessage());
             return null;
@@ -63,7 +64,7 @@ public class FileFavoriteRepo implements FavoriteRepo {
 
     private void saveToFile() {
         try (BufferedWriter bw = new BufferedWriter(new FileWriter(FAVORITES_FILE))) {
-            bw.write("favoriteId,userId,mediaId,mediaSource");
+            bw.write("favoriteId,userId,mediaId,mediaSource,mediaType");
             bw.newLine();
 
             for (Favorite favorite : favoriteCache.values()) {
@@ -80,7 +81,8 @@ public class FileFavoriteRepo implements FavoriteRepo {
         sb.append(favorite.getFavoriteId()).append(DELIMITER);
         sb.append(favorite.getUserId()).append(DELIMITER);
         sb.append(favorite.getMediaId()).append(DELIMITER);
-        sb.append(favorite.getMediaSource() != null ? favorite.getMediaSource() : "FILE");
+        sb.append(favorite.getMediaSource() != null ? favorite.getMediaSource() : "FILE").append(DELIMITER);
+        sb.append(favorite.getMediaType() != null ? favorite.getMediaType() : "");
         return sb.toString();
     }
 

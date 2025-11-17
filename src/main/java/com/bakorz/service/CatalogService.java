@@ -47,10 +47,31 @@ public class CatalogService {
             return;
         }
 
-        Optional<MediaItem> existing = fileRepo.getById(item.getId());
+        // Create a unique cache key by prefixing with source
+        String cacheKey = getCacheKey(item);
+        Optional<MediaItem> existing = fileRepo.getById(cacheKey);
         if (!existing.isPresent()) {
+            // Temporarily change the ID to include source prefix for caching
+            String originalId = item.getId();
+            item.setId(cacheKey);
             fileRepo.save(item);
+            // Restore original ID
+            item.setId(originalId);
         }
+    }
+
+    private String getCacheKey(MediaItem item) {
+        String prefix;
+        if (item instanceof Anime) {
+            prefix = "MAL";
+        } else if (item instanceof Movie) {
+            prefix = "TMDB_MOVIE";
+        } else if (item instanceof TVShow) {
+            prefix = "TMDB_TV";
+        } else {
+            prefix = "FILE";
+        }
+        return prefix + ":" + item.getId();
     }
 
     public Optional<MediaItem> getById(String id) {
@@ -70,16 +91,69 @@ public class CatalogService {
     }
 
     public Optional<MediaItem> getById(String id, String mediaSource) {
+        return getById(id, mediaSource, null);
+    }
+
+    public Optional<MediaItem> getById(String id, String mediaSource, String mediaType) {
         try {
             switch (mediaSource) {
                 case "MAL":
-                    return malRepo.getById(id);
+                    Optional<MediaItem> malResult = malRepo.getById(id);
+                    if (malResult.isPresent()) {
+                        return malResult;
+                    }
+                    // Try cache with composite key
+                    Optional<MediaItem> cachedMal = fileRepo.getById("MAL:" + id);
+                    if (cachedMal.isPresent()) {
+                        // Restore original ID without prefix
+                        cachedMal.get().setId(id);
+                        return cachedMal;
+                    }
+                    return Optional.empty();
                 case "TMDB":
-                    return tmdbRepo.getById(id);
+                    // If mediaType is specified, try the specific cache key first
+                    if (mediaType != null) {
+                        String cacheKey = null;
+                        if ("MOVIE".equals(mediaType)) {
+                            cacheKey = "TMDB_MOVIE:" + id;
+                        } else if ("TV_SHOW".equals(mediaType)) {
+                            cacheKey = "TMDB_TV:" + id;
+                        }
+
+                        if (cacheKey != null) {
+                            Optional<MediaItem> cachedItem = fileRepo.getById(cacheKey);
+                            if (cachedItem.isPresent()) {
+                                // Restore original ID without prefix
+                                cachedItem.get().setId(id);
+                                return cachedItem;
+                            }
+                        }
+                    }
+
+                    // Try API
+                    Optional<MediaItem> tmdbResult = tmdbRepo.getById(id);
+                    if (tmdbResult.isPresent()) {
+                        return tmdbResult;
+                    }
+
+                    // Fallback: try both cache keys if mediaType wasn't specified
+                    if (mediaType == null) {
+                        Optional<MediaItem> cachedMovie = fileRepo.getById("TMDB_MOVIE:" + id);
+                        if (cachedMovie.isPresent()) {
+                            cachedMovie.get().setId(id);
+                            return cachedMovie;
+                        }
+                        Optional<MediaItem> cachedTV = fileRepo.getById("TMDB_TV:" + id);
+                        if (cachedTV.isPresent()) {
+                            cachedTV.get().setId(id);
+                            return cachedTV;
+                        }
+                    }
+                    return Optional.empty();
                 case "FILE":
                     return fileRepo.getById(id);
                 default:
-                    return getById(id);
+                    return Optional.empty();
             }
         } catch (Exception e) {
             System.err.println("Error getting media by ID from " + mediaSource + ": " + e.getMessage());
