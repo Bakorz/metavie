@@ -71,22 +71,6 @@
                         </ScrollPane>
                      </children>
                   </VBox>
-                  <VBox fx:id="topRatedMoviesSection" spacing="10.0">
-                     <children>
-                        <HBox alignment="CENTER_LEFT" spacing="10.0">
-                           <children>
-                              <Label style="-fx-text-fill: white; -fx-font-size: 20; -fx-font-weight: bold;" text="Top Rated Movie" HBox.hgrow="ALWAYS" />
-                              <Region HBox.hgrow="ALWAYS" />
-                              <Button fx:id="loadMoreTopMovies" mnemonicParsing="false" onAction="#handleTopMovies" style="-fx-background-color: transparent; -fx-text-fill: E50914; -fx-border-color: E50914;" text="Load More" />
-                           </children>
-                        </HBox>
-                        <ScrollPane fx:id="topRatedMoviesScroll" fitToHeight="true" style="-fx-background: transparent; -fx-background-color: transparent;">
-                           <content>
-                              <HBox fx:id="topRatedMoviesContainer" spacing="15.0" style="-fx-padding: 10px;" />
-                           </content>
-                        </ScrollPane>
-                     </children>
-                  </VBox>
                   <VBox fx:id="LatestMoviesSection" spacing="10.0">
                      <children>
                         <HBox alignment="CENTER_LEFT" spacing="10.0">

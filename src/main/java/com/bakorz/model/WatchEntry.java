@@ -1,13 +1,10 @@
 package com.bakorz.model;
 
-/**
- * Represents a watch history entry for a user and media item
- */
 public class WatchEntry {
     private String watchId;
     private String userId;
     private String mediaId;
-    private String mediaSource; // "MAL", "TMDB", or "FILE" to track which API
+    private String mediaSource;
 
     public WatchEntry() {
     }
@@ -18,7 +15,6 @@ public class WatchEntry {
         this.mediaId = mediaId;
     }
 
-    // Getters and Setters
     public String getWatchId() {
         return watchId;
     }

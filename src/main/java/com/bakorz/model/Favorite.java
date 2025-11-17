@@ -1,13 +1,10 @@
 package com.bakorz.model;
 
-/**
- * Represents a favorite relationship between a User and a MediaItem
- */
 public class Favorite {
     private String favoriteId;
     private String userId;
     private String mediaId;
-    private String mediaSource; // "MAL", "TMDB", or "FILE" to track which API
+    private String mediaSource;
 
     public Favorite() {
     }

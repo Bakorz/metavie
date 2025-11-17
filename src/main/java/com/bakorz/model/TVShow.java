@@ -2,18 +2,15 @@ package com.bakorz.model;
 
 import java.util.List;
 
-/**
- * Represents a TV Show media item
- */
 public class TVShow extends MediaItem {
     private int numberOfSeasons;
     private int numberOfEpisodes;
     private List<String> creators;
-    private String status; // "Continuing", "Ended", "Upcoming"
+    private String status;
     private String firstAirDate;
     private String lastAirDate;
     private List<String> networks;
-    private int episodeRuntime; // average runtime in minutes
+    private int episodeRuntime;
     private String imdbId;
     private String tmdbId;
 

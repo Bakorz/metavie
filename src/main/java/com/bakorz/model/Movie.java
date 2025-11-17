@@ -2,13 +2,9 @@ package com.bakorz.model;
 
 import java.util.List;
 
-/**
- * Represents a Movie media item
- */
 public class Movie extends MediaItem {
-    private int runtime; // in minutes
+    private int runtime;
     private String director;
-    private List<String> cast;
     private String imdbId;
     private String tmdbId;
     private long budget;
@@ -20,12 +16,11 @@ public class Movie extends MediaItem {
 
     public Movie(String id, String title, String description, List<String> genres,
             double rating, String releaseDate, String posterUrl, String backdropUrl,
-            int runtime, String director, List<String> cast, String imdbId,
+            int runtime, String director, String imdbId,
             String tmdbId, long budget, long revenue) {
         super(id, title, description, genres, rating, releaseDate, posterUrl, backdropUrl);
         this.runtime = runtime;
         this.director = director;
-        this.cast = cast;
         this.imdbId = imdbId;
         this.tmdbId = tmdbId;
         this.budget = budget;
@@ -37,7 +32,6 @@ public class Movie extends MediaItem {
         return "MOVIE";
     }
 
-    // Getters and Setters
     public int getRuntime() {
         return runtime;
     }
@@ -52,14 +46,6 @@ public class Movie extends MediaItem {
 
     public void setDirector(String director) {
         this.director = director;
-    }
-
-    public List<String> getCast() {
-        return cast;
-    }
-
-    public void setCast(List<String> cast) {
-        this.cast = cast;
     }
 
     public String getImdbId() {

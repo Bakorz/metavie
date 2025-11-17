@@ -27,8 +27,8 @@ public class MetavieApp extends Application {
         FileWatchRepo fileWatchRepo = new FileWatchRepo();
 
         // Initialize API repositories
-        String malClientId = "your_mal_client_id_here";
-        String tmdbApiKey = "your_tmdb_api_key_here";
+        String malClientId = "57b341f948bbb18ed62b6300db7df135";
+        String tmdbApiKey = "f1fa8dc0755eae97610653fe943dcce4";
 
         MalMediaRepo malMediaRepo = new MalMediaRepo(malClientId);
         TmdbMediaRepo tmdbMediaRepo = new TmdbMediaRepo(tmdbApiKey);
