@@ -3,7 +3,6 @@ package com.bakorz.service;
 import com.bakorz.model.*;
 import com.bakorz.repo.*;
 import java.util.*;
-import java.util.stream.Collectors;
 
 /**
  * FavoriteService manages user favorites
@@ -11,11 +10,9 @@ import java.util.stream.Collectors;
  */
 public class FavoriteService {
     private FileFavoriteRepo favoriteRepo;
-    private CatalogService catalogService;
 
-    public FavoriteService(FileFavoriteRepo favoriteRepo, CatalogService catalogService) {
+    public FavoriteService(FileFavoriteRepo favoriteRepo) {
         this.favoriteRepo = favoriteRepo;
-        this.catalogService = catalogService;
     }
 
     /**
@@ -60,102 +57,4 @@ public class FavoriteService {
         return favoriteRepo.getFavoritesByUser(userId);
     }
 
-    /**
-     * Get all favorites for a user with full media details
-     */
-    public List<Map<String, Object>> getUserFavoritesWithDetails(String userId) {
-        List<Favorite> favorites = getUserFavorites(userId);
-        List<Map<String, Object>> favoritesWithDetails = new ArrayList<>();
-
-        for (Favorite favorite : favorites) {
-            Map<String, Object> favoriteDetail = new HashMap<>();
-            favoriteDetail.put("favorite", favorite);
-
-            // Get full media details from catalog
-            Optional<MediaItem> media = catalogService.getById(favorite.getMediaId());
-            media.ifPresent(item -> favoriteDetail.put("media", item));
-
-            favoritesWithDetails.add(favoriteDetail);
-        }
-
-        return favoritesWithDetails;
-    }
-
-    /**
-     * Get favorite statistics for a user
-     */
-    public Map<String, Object> getFavoriteStats(String userId) {
-        List<Favorite> favorites = getUserFavorites(userId);
-        Map<String, Object> stats = new HashMap<>();
-
-        stats.put("totalFavorites", favorites.size());
-
-        // Count by media type
-        Map<String, Long> typeCount = new HashMap<>();
-        for (Favorite favorite : favorites) {
-            Optional<MediaItem> media = catalogService.getById(favorite.getMediaId(), favorite.getMediaSource());
-            if (media.isPresent()) {
-                String type = media.get().getMediaType();
-                typeCount.put(type, typeCount.getOrDefault(type, 0L) + 1);
-            }
-        }
-        stats.put("byType", typeCount);
-
-        return stats;
-    }
-
-    /**
-     * Search within user's favorites
-     */
-    public List<Favorite> searchFavorites(String userId, String query) {
-        List<Favorite> allFavorites = getUserFavorites(userId);
-        List<Favorite> results = new ArrayList<>();
-
-        for (Favorite favorite : allFavorites) {
-            // Search in media title
-            Optional<MediaItem> media = catalogService.getById(favorite.getMediaId(), favorite.getMediaSource());
-            if (media.isPresent() &&
-                    media.get().getTitle().toLowerCase().contains(query.toLowerCase())) {
-                results.add(favorite);
-            }
-        }
-
-        return results;
-    }
-
-    /**
-     * Export user's favorites to a list of media IDs
-     */
-    public List<String> exportFavoriteIds(String userId) {
-        return getUserFavorites(userId).stream()
-                .map(Favorite::getMediaId)
-                .collect(Collectors.toList());
-    }
-
-    /**
-     * Import favorites from a list of media IDs
-     */
-    public int importFavorites(String userId, List<String> mediaIds) {
-        int imported = 0;
-        for (String mediaId : mediaIds) {
-            if (addFavorite(userId, mediaId)) {
-                imported++;
-            }
-        }
-        return imported;
-    }
-
-    /**
-     * Clear all favorites for a user
-     */
-    public boolean clearAllFavorites(String userId) {
-        List<Favorite> favorites = getUserFavorites(userId);
-        int removed = 0;
-        for (Favorite favorite : favorites) {
-            if (favoriteRepo.removeFavoriteByUserAndMedia(userId, favorite.getMediaId())) {
-                removed++;
-            }
-        }
-        return removed == favorites.size();
-    }
 }
