@@ -6,10 +6,6 @@ import java.io.*;
 import java.net.*;
 import java.util.*;
 
-/**
- * TMDB (The Movie Database) implementation of MediaRepo
- * Fetches movie and TV show metadata from TMDB API
- */
 public class TmdbMediaRepo implements MediaRepo {
     private static final String TMDB_API_BASE = "https://api.themoviedb.org/3";
     private static final String IMAGE_BASE = "https://image.tmdb.org/t/p/";
@@ -21,9 +17,6 @@ public class TmdbMediaRepo implements MediaRepo {
         this.gson = new Gson();
     }
 
-    /**
-     * Make HTTP GET request to TMDB API
-     */
     private String makeApiRequest(String endpoint) throws IOException {
         String separator = endpoint.contains("?") ? "&" : "?";
         String urlString = TMDB_API_BASE + endpoint + separator + "api_key=" + apiKey;
@@ -50,28 +43,21 @@ public class TmdbMediaRepo implements MediaRepo {
         return response.toString();
     }
 
-    /**
-     * Parse JSON response to Movie object
-     */
     private Movie parseMovieFromJson(JsonObject movieJson) {
         Movie movie = new Movie();
 
-        // Basic fields
         movie.setId(String.valueOf(movieJson.get("id").getAsInt()));
         movie.setTitle(movieJson.get("title").getAsString());
         movie.setTmdbId(String.valueOf(movieJson.get("id").getAsInt()));
 
-        // Description
         if (movieJson.has("overview") && !movieJson.get("overview").isJsonNull()) {
             movie.setDescription(movieJson.get("overview").getAsString());
         }
 
-        // Rating
         if (movieJson.has("vote_average") && !movieJson.get("vote_average").isJsonNull()) {
             movie.setRating(movieJson.get("vote_average").getAsDouble());
         }
 
-        // Release date
         if (movieJson.has("release_date") && !movieJson.get("release_date").isJsonNull()) {
             String dateStr = movieJson.get("release_date").getAsString();
             if (!dateStr.isEmpty()) {
@@ -79,7 +65,6 @@ public class TmdbMediaRepo implements MediaRepo {
             }
         }
 
-        // Poster and backdrop
         if (movieJson.has("poster_path") && !movieJson.get("poster_path").isJsonNull()) {
             movie.setPosterUrl(IMAGE_BASE + "w500" + movieJson.get("poster_path").getAsString());
         }
@@ -87,7 +72,6 @@ public class TmdbMediaRepo implements MediaRepo {
             movie.setBackdropUrl(IMAGE_BASE + "original" + movieJson.get("backdrop_path").getAsString());
         }
 
-        // Genres
         if (movieJson.has("genres")) {
             List<String> genres = new ArrayList<>();
             JsonArray genresArray = movieJson.getAsJsonArray("genres");
@@ -97,7 +81,6 @@ public class TmdbMediaRepo implements MediaRepo {
             }
             movie.setGenres(genres);
         } else if (movieJson.has("genre_ids")) {
-            // For search results that only have genre IDs
             List<String> genres = new ArrayList<>();
             JsonArray genreIds = movieJson.getAsJsonArray("genre_ids");
             for (JsonElement genreId : genreIds) {
@@ -106,12 +89,10 @@ public class TmdbMediaRepo implements MediaRepo {
             movie.setGenres(genres);
         }
 
-        // Runtime
         if (movieJson.has("runtime") && !movieJson.get("runtime").isJsonNull()) {
             movie.setRuntime(movieJson.get("runtime").getAsInt());
         }
 
-        // Budget and Revenue
         if (movieJson.has("budget") && !movieJson.get("budget").isJsonNull()) {
             movie.setBudget(movieJson.get("budget").getAsLong());
         }
@@ -119,7 +100,6 @@ public class TmdbMediaRepo implements MediaRepo {
             movie.setRevenue(movieJson.get("revenue").getAsLong());
         }
 
-        // IMDB ID
         if (movieJson.has("imdb_id") && !movieJson.get("imdb_id").isJsonNull()) {
             movie.setImdbId(movieJson.get("imdb_id").getAsString());
         }
@@ -127,28 +107,21 @@ public class TmdbMediaRepo implements MediaRepo {
         return movie;
     }
 
-    /**
-     * Parse JSON response to TVShow object
-     */
     private TVShow parseTVShowFromJson(JsonObject tvJson) {
         TVShow tvShow = new TVShow();
 
-        // Basic fields
         tvShow.setId(String.valueOf(tvJson.get("id").getAsInt()));
         tvShow.setTitle(tvJson.get("name").getAsString());
         tvShow.setTmdbId(String.valueOf(tvJson.get("id").getAsInt()));
 
-        // Description
         if (tvJson.has("overview") && !tvJson.get("overview").isJsonNull()) {
             tvShow.setDescription(tvJson.get("overview").getAsString());
         }
 
-        // Rating
         if (tvJson.has("vote_average") && !tvJson.get("vote_average").isJsonNull()) {
             tvShow.setRating(tvJson.get("vote_average").getAsDouble());
         }
 
-        // First air date
         if (tvJson.has("first_air_date") && !tvJson.get("first_air_date").isJsonNull()) {
             String dateStr = tvJson.get("first_air_date").getAsString();
             if (!dateStr.isEmpty()) {
@@ -157,7 +130,6 @@ public class TmdbMediaRepo implements MediaRepo {
             }
         }
 
-        // Last air date
         if (tvJson.has("last_air_date") && !tvJson.get("last_air_date").isJsonNull()) {
             String dateStr = tvJson.get("last_air_date").getAsString();
             if (!dateStr.isEmpty()) {
@@ -165,7 +137,6 @@ public class TmdbMediaRepo implements MediaRepo {
             }
         }
 
-        // Poster and backdrop
         if (tvJson.has("poster_path") && !tvJson.get("poster_path").isJsonNull()) {
             tvShow.setPosterUrl(IMAGE_BASE + "w500" + tvJson.get("poster_path").getAsString());
         }
@@ -173,7 +144,6 @@ public class TmdbMediaRepo implements MediaRepo {
             tvShow.setBackdropUrl(IMAGE_BASE + "original" + tvJson.get("backdrop_path").getAsString());
         }
 
-        // Genres
         if (tvJson.has("genres")) {
             List<String> genres = new ArrayList<>();
             JsonArray genresArray = tvJson.getAsJsonArray("genres");
@@ -191,7 +161,6 @@ public class TmdbMediaRepo implements MediaRepo {
             tvShow.setGenres(genres);
         }
 
-        // Number of seasons and episodes
         if (tvJson.has("number_of_seasons") && !tvJson.get("number_of_seasons").isJsonNull()) {
             tvShow.setNumberOfSeasons(tvJson.get("number_of_seasons").getAsInt());
         }
@@ -199,12 +168,10 @@ public class TmdbMediaRepo implements MediaRepo {
             tvShow.setNumberOfEpisodes(tvJson.get("number_of_episodes").getAsInt());
         }
 
-        // Status
         if (tvJson.has("status") && !tvJson.get("status").isJsonNull()) {
             tvShow.setStatus(tvJson.get("status").getAsString());
         }
 
-        // Episode runtime
         if (tvJson.has("episode_run_time")) {
             JsonArray runtimes = tvJson.getAsJsonArray("episode_run_time");
             if (runtimes.size() > 0 && !runtimes.get(0).isJsonNull()) {
@@ -212,7 +179,6 @@ public class TmdbMediaRepo implements MediaRepo {
             }
         }
 
-        // Networks
         if (tvJson.has("networks")) {
             List<String> networks = new ArrayList<>();
             JsonArray networksArray = tvJson.getAsJsonArray("networks");
@@ -223,7 +189,6 @@ public class TmdbMediaRepo implements MediaRepo {
             tvShow.setNetworks(networks);
         }
 
-        // Creators
         if (tvJson.has("created_by")) {
             List<String> creators = new ArrayList<>();
             JsonArray creatorsArray = tvJson.getAsJsonArray("created_by");
@@ -240,10 +205,8 @@ public class TmdbMediaRepo implements MediaRepo {
     @Override
     public List<MediaItem> searchByTitle(String title) {
         try {
-            // Search for both movies and TV shows
             List<MediaItem> results = new ArrayList<>();
 
-            // Search movies
             String movieResponse = makeApiRequest("/search/movie?query=" + URLEncoder.encode(title, "UTF-8"));
             JsonObject movieJson = gson.fromJson(movieResponse, JsonObject.class);
             if (movieJson.has("results")) {
@@ -253,7 +216,6 @@ public class TmdbMediaRepo implements MediaRepo {
                 }
             }
 
-            // Search TV shows
             String tvResponse = makeApiRequest("/search/tv?query=" + URLEncoder.encode(title, "UTF-8"));
             JsonObject tvJson = gson.fromJson(tvResponse, JsonObject.class);
             if (tvJson.has("results")) {
@@ -272,13 +234,11 @@ public class TmdbMediaRepo implements MediaRepo {
 
     @Override
     public Optional<MediaItem> getById(String id) {
-        // Try as movie first
         Optional<Movie> movie = getMovieById(id);
         if (movie.isPresent()) {
             return movie.map(m -> (MediaItem) m);
         }
 
-        // Try as TV show
         Optional<TVShow> tvShow = getTVShowById(id);
         return tvShow.map(tv -> (MediaItem) tv);
     }
@@ -309,7 +269,6 @@ public class TmdbMediaRepo implements MediaRepo {
 
     @Override
     public Optional<Anime> getAnimeById(String id) {
-        // TMDB doesn't have anime-specific data, return empty
         return Optional.empty();
     }
 
@@ -318,8 +277,6 @@ public class TmdbMediaRepo implements MediaRepo {
         try {
             List<MediaItem> results = new ArrayList<>();
 
-            // For simplicity, search by genre name
-            // In production, you'd map genre names to TMDB genre IDs
             String movieResponse = makeApiRequest("/discover/movie?with_genres=" + genre);
             JsonObject movieJson = gson.fromJson(movieResponse, JsonObject.class);
             if (movieJson.has("results")) {
@@ -340,20 +297,14 @@ public class TmdbMediaRepo implements MediaRepo {
     public List<MediaItem> getTopRated(int limit) {
         return getTopRated(limit, 1);
     }
-
-    /**
-     * Get top-rated movies and TV shows with pagination support
-     */
     public List<MediaItem> getTopRated(int limit, int page) {
         try {
             List<MediaItem> results = new ArrayList<>();
 
-            // Calculate how many pages we need to fetch to get 'limit' items
-            int itemsPerPage = 20; // TMDB returns 20 items per page
+            int itemsPerPage = 20;
             int moviesNeeded = limit / 2;
             int tvShowsNeeded = limit / 2;
 
-            // Get top-rated movies (fetch multiple pages if needed)
             int moviesFetched = 0;
             int moviePage = page;
             while (moviesFetched < moviesNeeded) {
@@ -368,12 +319,11 @@ public class TmdbMediaRepo implements MediaRepo {
                         moviesFetched++;
                     }
                     if (movieResults.size() < itemsPerPage)
-                        break; // No more pages
+                        break;
                 }
                 moviePage++;
             }
 
-            // Get top-rated TV shows (fetch multiple pages if needed)
             int tvShowsFetched = 0;
             int tvPage = page;
             while (tvShowsFetched < tvShowsNeeded) {
@@ -388,7 +338,7 @@ public class TmdbMediaRepo implements MediaRepo {
                         tvShowsFetched++;
                     }
                     if (tvResults.size() < itemsPerPage)
-                        break; // No more pages
+                        break;
                 }
                 tvPage++;
             }
@@ -405,12 +355,8 @@ public class TmdbMediaRepo implements MediaRepo {
         return getLatestMovies(limit, 1);
     }
 
-    /**
-     * Get latest movies with pagination support
-     */
     public List<Movie> getLatestMovies(int limit, int page) {
         try {
-            // Use TMDB's "now_playing" endpoint which shows movies currently in theaters
             String response = makeApiRequest("/movie/now_playing?language=en-US&page=" + page);
             JsonObject jsonResponse = gson.fromJson(response, JsonObject.class);
 
@@ -449,12 +395,8 @@ public class TmdbMediaRepo implements MediaRepo {
         return getLatestTVShows(limit, 1);
     }
 
-    /**
-     * Get latest TV shows with pagination support
-     */
     public List<TVShow> getLatestTVShows(int limit, int page) {
         try {
-            // Use TMDB's "on_the_air" endpoint which shows TV shows currently airing
             String response = makeApiRequest("/tv/on_the_air?language=en-US&page=" + page);
             JsonObject jsonResponse = gson.fromJson(response, JsonObject.class);
             JsonArray tvArray = jsonResponse.getAsJsonArray("results");

@@ -4,10 +4,6 @@ import com.bakorz.model.WatchEntry;
 import java.io.*;
 import java.util.*;
 
-/**
- * File-based implementation of WatchRepo
- * Saves and loads watch entries from CSV file
- */
 public class FileWatchRepo implements WatchRepo {
     private static final String WATCH_FILE = "data/watch.csv";
     private static final String DELIMITER = ",";
@@ -19,9 +15,6 @@ public class FileWatchRepo implements WatchRepo {
         loadFromFile();
     }
 
-    /**
-     * Load watch entries from CSV file
-     */
     private void loadFromFile() {
         File file = new File(WATCH_FILE);
         if (!file.exists()) {
@@ -48,9 +41,6 @@ public class FileWatchRepo implements WatchRepo {
         }
     }
 
-    /**
-     * Parse a CSV line into a WatchEntry
-     */
     private WatchEntry parseWatchEntry(String line) {
         String[] parts = line.split(DELIMITER, -1);
         if (parts.length < 4) {
@@ -72,9 +62,6 @@ public class FileWatchRepo implements WatchRepo {
         }
     }
 
-    /**
-     * Save all watch entries to file
-     */
     private void saveToFile() {
         File file = new File(WATCH_FILE);
         file.getParentFile().mkdirs();
@@ -95,9 +82,6 @@ public class FileWatchRepo implements WatchRepo {
         }
     }
 
-    /**
-     * Convert WatchEntry to CSV line
-     */
     private String entryToCSV(WatchEntry entry) {
         StringBuilder sb = new StringBuilder();
         sb.append(entry.getWatchId()).append(DELIMITER);

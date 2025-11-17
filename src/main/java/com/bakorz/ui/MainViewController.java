@@ -55,7 +55,6 @@ public class MainViewController {
     @FXML
     public void initialize() {
         System.out.println("MainViewController FXML initialized!");
-        // Initialize page counters
         pageCounters.put("Top Rated Movies", 1);
         pageCounters.put("Latest Movies", 1);
         pageCounters.put("Top Rated TV Shows", 1);
@@ -74,7 +73,6 @@ public class MainViewController {
         this.trackingService = trackingService;
         this.userId = userId;
 
-        // Load initial data
         loadAllSections();
     }
 

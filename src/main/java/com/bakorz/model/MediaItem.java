@@ -2,9 +2,6 @@ package com.bakorz.model;
 
 import java.util.List;
 
-/**
- * Abstract base class for all media items (Movie, TVShow, Anime)
- */
 public abstract class MediaItem {
     protected String id;
     protected String title;
@@ -30,10 +27,8 @@ public abstract class MediaItem {
         this.backdropUrl = backdropUrl;
     }
 
-    // Abstract method to be implemented by subclasses
     public abstract String getMediaType();
 
-    // Getters and Setters
     public String getId() {
         return id;
     }

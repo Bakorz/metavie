@@ -34,7 +34,6 @@ public class User {
         this.lastLogin = lastLogin;
     }
 
-    // Getters and Setters
     public String getUserId() {
         return userId;
     }

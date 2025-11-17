@@ -5,10 +5,6 @@ import java.io.*;
 import java.util.*;
 import java.util.stream.Collectors;
 
-/**
- * File-based implementation of MediaRepo
- * Saves and loads media items from CSV files
- */
 public class FileMediaRepo implements MediaRepo {
     private static final String MEDIA_FILE = "data/media.csv";
     private static final String DELIMITER = ",";
@@ -20,9 +16,6 @@ public class FileMediaRepo implements MediaRepo {
         loadFromFile();
     }
 
-    /**
-     * Load media items from CSV file
-     */
     private void loadFromFile() {
         File file = new File(MEDIA_FILE);
         if (!file.exists()) {
@@ -49,9 +42,6 @@ public class FileMediaRepo implements MediaRepo {
         }
     }
 
-    /**
-     * Parse a CSV line into a MediaItem
-     */
     private MediaItem parseMediaItem(String line) {
         try {
             List<String> fields = parseCSVLine(line);
@@ -200,9 +190,6 @@ public class FileMediaRepo implements MediaRepo {
         }
     }
 
-    /**
-     * Save all media items to CSV file
-     */
     private void saveToFile() {
         try (BufferedWriter bw = new BufferedWriter(new FileWriter(MEDIA_FILE))) {
             // Write header
@@ -219,9 +206,6 @@ public class FileMediaRepo implements MediaRepo {
         }
     }
 
-    /**
-     * Format a MediaItem as CSV line
-     */
     private String formatMediaItem(MediaItem item) {
         StringBuilder sb = new StringBuilder();
         sb.append(item.getId()).append(DELIMITER);
@@ -235,15 +219,11 @@ public class FileMediaRepo implements MediaRepo {
         sb.append(escapeCSV(item.getPosterUrl())).append(DELIMITER);
         sb.append(escapeCSV(item.getBackdropUrl())).append(DELIMITER);
 
-        // Add type-specific data
         sb.append(escapeCSV(formatAdditionalData(item)));
 
         return sb.toString();
     }
 
-    /**
-     * Format type-specific data
-     */
     private String formatAdditionalData(MediaItem item) {
         StringBuilder sb = new StringBuilder();
         if (item instanceof Movie) {
@@ -264,9 +244,6 @@ public class FileMediaRepo implements MediaRepo {
         return sb.toString();
     }
 
-    /**
-     * Escape CSV special characters
-     */
     private String escapeCSV(String value) {
         if (value == null) {
             return "";

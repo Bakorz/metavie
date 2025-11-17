@@ -17,4 +17,4 @@ data/*.csv
 *.code-workspace
 .env
 .idea/
-/docs
+docs/

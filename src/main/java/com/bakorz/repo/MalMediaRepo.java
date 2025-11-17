@@ -6,10 +6,6 @@ import java.io.*;
 import java.net.*;
 import java.util.*;
 
-/**
- * MyAnimeList-based implementation of MediaRepo
- * Fetches anime metadata from MyAnimeList API
- */
 public class MalMediaRepo implements MediaRepo {
     private static final String MAL_API_BASE = "https://api.myanimelist.net/v2/";
     private String clientId;
@@ -20,9 +16,6 @@ public class MalMediaRepo implements MediaRepo {
         this.gson = new Gson();
     }
 
-    /**
-     * Make HTTP GET request to MyAnimeList API
-     */
     private String makeApiRequest(String endpoint) throws IOException {
         URI uri = URI.create(MAL_API_BASE + endpoint);
         URL url = uri.toURL();
@@ -47,29 +40,22 @@ public class MalMediaRepo implements MediaRepo {
         return response.toString();
     }
 
-    /**
-     * Parse JSON response to Anime object
-     */
     private Anime parseAnimeFromJson(JsonObject animeJson) {
         Anime anime = new Anime();
 
-        // Basic fields
         anime.setId(String.valueOf(animeJson.get("id").getAsInt()));
         anime.setTitle(animeJson.get("title").getAsString());
         anime.setMalId(animeJson.get("id").getAsInt());
 
-        // Description/Synopsis
         if (animeJson.has("synopsis") && !animeJson.get("synopsis").isJsonNull()) {
             anime.setDescription(animeJson.get("synopsis").getAsString());
         }
 
-        // Rating/Score
         if (animeJson.has("mean") && !animeJson.get("mean").isJsonNull()) {
             anime.setRating(animeJson.get("mean").getAsDouble());
             anime.setMalScore(animeJson.get("mean").getAsDouble());
         }
 
-        // Rank and Popularity
         if (animeJson.has("rank") && !animeJson.get("rank").isJsonNull()) {
             anime.setMalRank(animeJson.get("rank").getAsInt());
         }
@@ -77,7 +63,6 @@ public class MalMediaRepo implements MediaRepo {
             anime.setMalPopularity(animeJson.get("popularity").getAsInt());
         }
 
-        // Images
         if (animeJson.has("main_picture")) {
             JsonObject picture = animeJson.getAsJsonObject("main_picture");
             if (picture.has("medium")) {
@@ -88,7 +73,6 @@ public class MalMediaRepo implements MediaRepo {
             }
         }
 
-        // Genres
         if (animeJson.has("genres")) {
             List<String> genres = new ArrayList<>();
             JsonArray genresArray = animeJson.getAsJsonArray("genres");
@@ -99,29 +83,24 @@ public class MalMediaRepo implements MediaRepo {
             anime.setGenres(genres);
         }
 
-        // Media Type (TV, Movie, OVA, etc.)
         if (animeJson.has("media_type") && !animeJson.get("media_type").isJsonNull()) {
             anime.setAnimeType(animeJson.get("media_type").getAsString().toUpperCase());
         }
 
-        // Status
         if (animeJson.has("status") && !animeJson.get("status").isJsonNull()) {
             anime.setStatus(animeJson.get("status").getAsString());
         }
 
-        // Number of episodes
         if (animeJson.has("num_episodes") && !animeJson.get("num_episodes").isJsonNull()) {
             anime.setEpisodes(animeJson.get("num_episodes").getAsInt());
         }
 
-        // Dates
         if (animeJson.has("start_date") && !animeJson.get("start_date").isJsonNull()) {
             String startDate = animeJson.get("start_date").getAsString();
             anime.setReleaseDate(startDate);
             anime.setAired(startDate);
         }
 
-        // Season and Year
         if (animeJson.has("start_season")) {
             JsonObject season = animeJson.getAsJsonObject("start_season");
             if (season.has("season")) {
@@ -132,12 +111,10 @@ public class MalMediaRepo implements MediaRepo {
             }
         }
 
-        // Source (manga, light novel, original, etc.)
         if (animeJson.has("source") && !animeJson.get("source").isJsonNull()) {
             anime.setSource(animeJson.get("source").getAsString());
         }
 
-        // Studios
         if (animeJson.has("studios")) {
             List<String> studios = new ArrayList<>();
             JsonArray studiosArray = animeJson.getAsJsonArray("studios");
@@ -148,7 +125,6 @@ public class MalMediaRepo implements MediaRepo {
             anime.setStudios(studios);
         }
 
-        // Duration (in seconds, convert to minutes)
         if (animeJson.has("average_episode_duration") && !animeJson.get("average_episode_duration").isJsonNull()) {
             int durationSeconds = animeJson.get("average_episode_duration").getAsInt();
             anime.setDuration(durationSeconds / 60); // Convert to minutes
@@ -188,13 +164,11 @@ public class MalMediaRepo implements MediaRepo {
 
     @Override
     public Optional<Movie> getMovieById(String id) {
-        // MAL doesn't have traditional movies in the same way, return empty
         return Optional.empty();
     }
 
     @Override
     public Optional<TVShow> getTVShowById(String id) {
-        // MAL doesn't have TV shows, return empty
         return Optional.empty();
     }
 
@@ -217,8 +191,6 @@ public class MalMediaRepo implements MediaRepo {
     @Override
     public List<MediaItem> getByGenre(String genre) {
         try {
-            // Note: MAL API v2 doesn't support direct genre search
-            // This is a workaround using regular search
             String response = makeApiRequest("anime?q=" + URLEncoder.encode(genre, "UTF-8") + "&limit=20");
 
             JsonObject jsonResponse = gson.fromJson(response, JsonObject.class);
@@ -242,9 +214,6 @@ public class MalMediaRepo implements MediaRepo {
         return getTopRated(limit, 0);
     }
 
-    /**
-     * Get top-rated anime with pagination support
-     */
     public List<MediaItem> getTopRated(int limit, int offset) {
         try {
             String response = makeApiRequest("anime/ranking?ranking_type=all&limit=" + limit + "&offset=" + offset +
@@ -287,12 +256,8 @@ public class MalMediaRepo implements MediaRepo {
         return new ArrayList<>(); // MAL doesn't handle TV shows
     }
 
-    /**
-     * Get latest/seasonal anime
-     */
     public List<Anime> getLatestAnime(int limit) {
         try {
-            // Get current season anime (airing now)
             String response = makeApiRequest("anime/ranking?ranking_type=airing&limit=" + limit +
                     "&fields=id,title,main_picture,synopsis,mean,rank,popularity,genres," +
                     "media_type,status,num_episodes,start_season,source,studios");

@@ -5,10 +5,6 @@ import java.io.*;
 import java.util.*;
 import java.util.stream.Collectors;
 
-/**
- * File-based implementation of FavoriteRepo
- * Saves and loads favorites from CSV file
- */
 public class FileFavoriteRepo implements FavoriteRepo {
     private static final String FAVORITES_FILE = "data/favorite.csv";
     private static final String DELIMITER = ",";
@@ -20,9 +16,6 @@ public class FileFavoriteRepo implements FavoriteRepo {
         loadFromFile();
     }
 
-    /**
-     * Load favorites from CSV file
-     */
     private void loadFromFile() {
         File file = new File(FAVORITES_FILE);
         if (!file.exists()) {
@@ -49,9 +42,6 @@ public class FileFavoriteRepo implements FavoriteRepo {
         }
     }
 
-    /**
-     * Parse a CSV line into a Favorite
-     */
     private Favorite parseFavorite(String line) {
         String[] parts = line.split(DELIMITER, -1);
         if (parts.length < 4) {
@@ -71,16 +61,11 @@ public class FileFavoriteRepo implements FavoriteRepo {
         }
     }
 
-    /**
-     * Save all favorites to CSV file
-     */
     private void saveToFile() {
         try (BufferedWriter bw = new BufferedWriter(new FileWriter(FAVORITES_FILE))) {
-            // Write header
             bw.write("favoriteId,userId,mediaId,mediaSource");
             bw.newLine();
 
-            // Write each favorite
             for (Favorite favorite : favoriteCache.values()) {
                 bw.write(formatFavorite(favorite));
                 bw.newLine();
@@ -90,9 +75,6 @@ public class FileFavoriteRepo implements FavoriteRepo {
         }
     }
 
-    /**
-     * Format a Favorite as CSV line
-     */
     private String formatFavorite(Favorite favorite) {
         StringBuilder sb = new StringBuilder();
         sb.append(favorite.getFavoriteId()).append(DELIMITER);

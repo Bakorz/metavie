@@ -2,24 +2,20 @@ package com.bakorz.model;
 
 import java.util.List;
 
-/**
- * Represents an Anime media item
- */
 public class Anime extends MediaItem {
-    private String animeType; // "TV", "Movie", "OVA", "Special", "ONA"
+    private String animeType; 
     private int episodes;
-    private String status; // "Airing", "Finished Airing", "Not yet aired"
-    private String aired; // e.g., "Apr 3, 2023 to ?"
-    private String source; // "Manga", "Light novel", "Original", etc.
+    private String status;
+    private String aired; 
+    private String source; 
     private List<String> studios;
-    private int malId; // MyAnimeList ID
+    private int malId;
     private double malScore;
     private int malRank;
     private int malPopularity;
-    private List<String> producers;
-    private String season; // "winter", "spring", "summer", "fall"
+    private String season;
     private int year;
-    private int duration; // per episode in minutes
+    private int duration;
 
     public Anime() {
         super();
@@ -29,7 +25,7 @@ public class Anime extends MediaItem {
             double rating, String releaseDate, String posterUrl, String backdropUrl,
             String animeType, int episodes, String status, String aired,
             String source, List<String> studios, int malId, double malScore,
-            int malRank, int malPopularity, List<String> producers,
+            int malRank, int malPopularity, 
             String season, int year, int duration) {
         super(id, title, description, genres, rating, releaseDate, posterUrl, backdropUrl);
         this.animeType = animeType;
@@ -42,7 +38,6 @@ public class Anime extends MediaItem {
         this.malScore = malScore;
         this.malRank = malRank;
         this.malPopularity = malPopularity;
-        this.producers = producers;
         this.season = season;
         this.year = year;
         this.duration = duration;
@@ -53,7 +48,6 @@ public class Anime extends MediaItem {
         return "ANIME";
     }
 
-    // Getters and Setters
     public String getAnimeType() {
         return animeType;
     }
@@ -132,14 +126,6 @@ public class Anime extends MediaItem {
 
     public void setMalPopularity(int malPopularity) {
         this.malPopularity = malPopularity;
-    }
-
-    public List<String> getProducers() {
-        return producers;
-    }
-
-    public void setProducers(List<String> producers) {
-        this.producers = producers;
     }
 
     public String getSeason() {
