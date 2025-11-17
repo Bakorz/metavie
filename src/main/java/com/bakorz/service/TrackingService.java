@@ -41,9 +41,6 @@ public class TrackingService {
         return false;
     }
 
-    /**
-     * Get currently watching (returns all watch entries for user)
-     */
     public List<WatchEntry> getCurrentlyWatching(String userId) {
         return watchRepo.getWatchEntriesByUser(userId);
     }
