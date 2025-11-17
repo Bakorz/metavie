@@ -11,29 +11,24 @@ import javafx.stage.Stage;
 
 public class MetavieApp extends Application {
 
-    // Services
     private CatalogService catalogService;
     private FavoriteService favoriteService;
     private TrackingService trackingService;
 
-    // Current user (for demo purposes, hardcoded)
     private static final String CURRENT_USER_ID = "user001";
 
     @Override
     public void init() {
-        // Initialize repositories
         FileMediaRepo fileMediaRepo = new FileMediaRepo();
         FileFavoriteRepo fileFavoriteRepo = new FileFavoriteRepo();
         FileWatchRepo fileWatchRepo = new FileWatchRepo();
 
-        // Initialize API repositories
         String malClientId = "57b341f948bbb18ed62b6300db7df135";
         String tmdbApiKey = "f1fa8dc0755eae97610653fe943dcce4";
 
         MalMediaRepo malMediaRepo = new MalMediaRepo(malClientId);
         TmdbMediaRepo tmdbMediaRepo = new TmdbMediaRepo(tmdbApiKey);
 
-        // Initialize services
         catalogService = new CatalogService(malMediaRepo, tmdbMediaRepo, fileMediaRepo);
         favoriteService = new FavoriteService(fileFavoriteRepo);
         trackingService = new TrackingService(fileWatchRepo);
@@ -44,18 +39,14 @@ public class MetavieApp extends Application {
     @Override
     public void start(Stage primaryStage) {
         try {
-            // Load FXML
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/MainView.fxml"));
             Parent root = loader.load();
             
-            // Get controller and inject services
             MainViewController controller = loader.getController();
             controller.setServices(catalogService, favoriteService, trackingService, CURRENT_USER_ID);
             
-            // Create scene
             Scene scene = new Scene(root, 1400, 800);
             
-            // Setup stage
             primaryStage.setTitle("Metavie");
             primaryStage.setScene(scene);
             primaryStage.setMinWidth(1400);

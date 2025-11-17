@@ -234,8 +234,8 @@ public class MainViewController {
         new Thread(() -> {
             try {
                 int page = pageCounters.get(sectionTitle);
-                page++; // Increment BEFORE fetching to avoid duplicate
-                pageCounters.put(sectionTitle, page); // Update counter
+                page++;
+                pageCounters.put(sectionTitle, page);
                 List<MediaItem> newItems = new ArrayList<>();
 
                 switch (sectionTitle) {
