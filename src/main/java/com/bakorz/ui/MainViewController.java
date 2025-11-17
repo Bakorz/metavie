@@ -19,19 +19,31 @@ public class MainViewController {
     private static final String CARD_BG = "#2a2a2a";
     private static final String RED = "#E50914";
 
-    @FXML private TextField searchField;
-    @FXML private Button searchButton;
-    @FXML private ScrollPane contentScrollPane;
-    @FXML private VBox contentContainer;
+    @FXML
+    private TextField searchField;
+    @FXML
+    private Button searchButton;
+    @FXML
+    private ScrollPane contentScrollPane;
+    @FXML
+    private VBox contentContainer;
 
-    @FXML private HBox continueWatchingContainer;
-    @FXML private HBox favoritesContainer;
-    @FXML private HBox latestMoviesContainer;
-    @FXML private HBox topRatedMoviesContainer;
-    @FXML private HBox latestTVShowsContainer;
-    @FXML private HBox topRatedTVShowsContainer;
-    @FXML private HBox topRatedAnimeContainer;
-    @FXML private HBox airingNowAnimeContainer;
+    @FXML
+    private HBox continueWatchingContainer;
+    @FXML
+    private HBox favoritesContainer;
+    @FXML
+    private HBox latestMoviesContainer;
+    @FXML
+    private HBox topRatedMoviesContainer;
+    @FXML
+    private HBox latestTVShowsContainer;
+    @FXML
+    private HBox topRatedTVShowsContainer;
+    @FXML
+    private HBox topRatedAnimeContainer;
+    @FXML
+    private HBox airingNowAnimeContainer;
 
     private CatalogService catalogService;
     private FavoriteService favoriteService;
@@ -222,6 +234,8 @@ public class MainViewController {
         new Thread(() -> {
             try {
                 int page = pageCounters.get(sectionTitle);
+                page++; // Increment BEFORE fetching to avoid duplicate
+                pageCounters.put(sectionTitle, page); // Update counter
                 List<MediaItem> newItems = new ArrayList<>();
 
                 switch (sectionTitle) {
@@ -230,34 +244,28 @@ public class MainViewController {
                                 .filter(item -> item instanceof Movie)
                                 .limit(10)
                                 .collect(Collectors.toList());
-                        pageCounters.put(sectionTitle, page + 1);
                         break;
                     case "Latest Movies":
                         newItems = new ArrayList<>(catalogService.getLatestMovies(10, page));
-                        pageCounters.put(sectionTitle, page + 1);
                         break;
                     case "Top Rated TV Shows":
                         newItems = catalogService.getTopRatedMoviesAndTV(20, page).stream()
                                 .filter(item -> item instanceof TVShow)
                                 .limit(10)
                                 .collect(Collectors.toList());
-                        pageCounters.put(sectionTitle, page + 1);
                         break;
                     case "Latest TV Shows":
                         newItems = new ArrayList<>(catalogService.getLatestTVShows(10, page));
-                        pageCounters.put(sectionTitle, page + 1);
                         break;
                     case "Top Rated Anime":
                         int offset = page * 10;
                         List<Anime> anime = catalogService.getTopRatedAnime(10, offset);
                         newItems = new ArrayList<>(anime);
-                        pageCounters.put(sectionTitle, page + 1);
                         break;
                     case "Latest Anime":
                         List<Anime> allAnime = catalogService.getLatestAnime(10 * page);
                         newItems = new ArrayList<>(allAnime.stream().skip((page - 1) * 10L).limit(10)
                                 .collect(Collectors.toList()));
-                        pageCounters.put(sectionTitle, page + 1);
                         break;
                 }
 

@@ -35,8 +35,8 @@ public class MetavieApp extends Application {
 
         // Initialize services
         catalogService = new CatalogService(malMediaRepo, tmdbMediaRepo, fileMediaRepo);
-        favoriteService = new FavoriteService(fileFavoriteRepo, catalogService);
-        trackingService = new TrackingService(fileWatchRepo, catalogService);
+        favoriteService = new FavoriteService(fileFavoriteRepo);
+        trackingService = new TrackingService(fileWatchRepo);
 
         System.out.println("Metavie services initialized successfully!");
     }
